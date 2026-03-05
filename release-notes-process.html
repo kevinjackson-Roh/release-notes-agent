@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>UnifiedAcquire Release Notes Process</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; font-size: 14px; color: #1a1a1a; background: #fff; padding: 48px; max-width: 860px; margin: auto; line-height: 1.6; }
+    h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; color: #111; }
+    .subtitle { color: #666; font-size: 14px; margin-bottom: 32px; }
+    h2 { font-size: 18px; font-weight: 600; margin: 32px 0 10px; color: #111; border-bottom: 2px solid #e5e7eb; padding-bottom: 6px; }
+    h3 { font-size: 15px; font-weight: 600; margin: 20px 0 8px; color: #333; }
+    p { margin-bottom: 10px; color: #333; }
+    ul, ol { padding-left: 22px; margin-bottom: 12px; }
+    li { margin-bottom: 5px; }
+    code { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-family: 'SF Mono', Monaco, monospace; font-size: 12px; color: #d63384; }
+    pre { background: #f8f9fa; border: 1px solid #e5e7eb; border-radius: 6px; padding: 14px 16px; margin: 12px 0; overflow-x: auto; }
+    pre code { background: none; padding: 0; color: #1a1a1a; font-size: 12px; line-height: 1.7; }
+    table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+    th { background: #f3f4f6; text-align: left; padding: 9px 12px; font-weight: 600; border: 1px solid #e5e7eb; }
+    td { padding: 8px 12px; border: 1px solid #e5e7eb; vertical-align: top; }
+    tr:nth-child(even) td { background: #fafafa; }
+    .badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+    .badge-free { background: #d1fae5; color: #065f46; }
+    .badge-paid { background: #fef3c7; color: #92400e; }
+    .badge-auto { background: #dbeafe; color: #1e40af; }
+    .callout { background: #f0f9ff; border-left: 4px solid #0ea5e9; padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }
+    .callout.warning { background: #fffbeb; border-color: #f59e0b; }
+    .callout.green { background: #f0fdf4; border-color: #22c55e; }
+    .step { display: flex; gap: 14px; margin-bottom: 14px; align-items: flex-start; }
+    .step-num { background: #111; color: #fff; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+    .step-content { flex: 1; }
+    .divider { border: none; border-top: 1px solid #e5e7eb; margin: 28px 0; }
+    .option-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .cost-table td:last-child { font-weight: 600; }
+    @media print {
+      body { padding: 24px; font-size: 13px; }
+      h2 { page-break-before: auto; }
+      pre { white-space: pre-wrap; }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>UnifiedAcquire Release Notes Process</h1>
+  <p class="subtitle">Created March 2026 &nbsp;·&nbsp; For internal distribution</p>
+
+  <h2>Overview</h2>
+  <p>
+    Each release cycle, Jira issues tagged with a release label (e.g. <code>UA4.5</code>) are used to generate
+    external- and internal-facing release notes. The notes are drafted using Claude AI, which matches the
+    tone and structure of previous Confluence release notes automatically.
+  </p>
+  <p>There are two ways to run this process:</p>
+  <table>
+    <thead>
+      <tr><th>Option</th><th>How it works</th><th>Cost</th><th>Effort</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Option A</strong><br>Manual Prompt</td>
+        <td>Paste a saved prompt into Claude.ai each release cycle</td>
+        <td><span class="badge badge-free">Free</span></td>
+        <td>~2 min/month</td>
+      </tr>
+      <tr>
+        <td><strong>Option B</strong><br>Automated Agent</td>
+        <td>GitHub Action runs on the 1st of every month, emails you a draft automatically</td>
+        <td><span class="badge badge-paid">~$0.02/month</span></td>
+        <td>Zero after setup</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <hr class="divider">
+
+  <h2>Option A — Manual Prompt <span class="badge badge-free">Free</span></h2>
+  <p>Use this if you want no infrastructure or API costs. Takes about 2 minutes per release.</p>
+
+  <h3>Steps</h3>
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-content">Go to <strong>claude.ai</strong> and start a new conversation. You must have access to the Atlassian MCP integration.</div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-content">Paste the prompt below, replacing the version number and label for the current release.</div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-content">Review the output and post to the UnifiedAcquire Confluence space.</div>
+  </div>
+
+  <h3>Saved Prompt Template</h3>
+  <pre><code>Create release notes for version [X.X.0] from our Jira board.
+Find all issues with the label [UAX.X], then match the tone and
+structure of our existing release notes on the UnifiedAcquire
+Confluence space (reference the most recent release notes page).
+Show me the draft here before posting anywhere.</code></pre>
+
+  <div class="callout green">
+    <strong>Example:</strong> For the 4.5 release, replace <code>[X.X.0]</code> with <code>4.5.0</code>
+    and <code>[UAX.X]</code> with <code>UA4.5</code>.
+  </div>
+
+  <hr class="divider">
+
+  <h2>Option B — Automated Agent <span class="badge badge-auto">Recommended</span></h2>
+  <p>
+    A Python script runs automatically on the 1st of every month via GitHub Actions.
+    It queries Jira, fetches the latest Confluence release notes for tone reference,
+    generates a draft with Claude, and emails it to you for review before anything is posted.
+  </p>
+
+  <h3>How It Works</h3>
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-content"><strong>Detect version</strong> — Finds the latest versioned release notes page on Confluence (e.g. 4.4.0) and computes the next version (4.5.0) and label (UA4.5) automatically.</div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-content"><strong>Fetch issues</strong> — Queries Jira for all issues tagged with that label. If none are found, the run exits silently with no email.</div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-content"><strong>Generate draft</strong> — Sends the issues and previous release notes to Claude API, which writes new notes matching the established tone and structure.</div>
+  </div>
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-content"><strong>Email draft</strong> — Sends the draft to <code>kevin.jackson@rohirrim.ai</code> for review. You then manually post to Confluence when satisfied.</div>
+  </div>
+
+  <h3>Repository</h3>
+  <p>Code lives at: <code>github.com/kevinjackson-Roh/release-notes-agent</code></p>
+  <table>
+    <thead><tr><th>File</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td><code>generate_release_notes.py</code></td><td>Main agent script</td></tr>
+      <tr><td><code>requirements.txt</code></td><td>Python dependencies</td></tr>
+      <tr><td><code>.github/workflows/monthly_release_notes.yml</code></td><td>Scheduled GitHub Action (runs 1st of every month, 9am UTC)</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Required Secrets (GitHub → Settings → Secrets → Actions)</h3>
+  <table>
+    <thead><tr><th>Secret Name</th><th>What It Is</th><th>Where to Get It</th></tr></thead>
+    <tbody>
+      <tr><td><code>ATLASSIAN_DOMAIN</code></td><td>Your Atlassian domain</td><td>e.g. <code>rohirrim.atlassian.net</code></td></tr>
+      <tr><td><code>ATLASSIAN_EMAIL</code></td><td>Your Atlassian login email</td><td>Your account email</td></tr>
+      <tr><td><code>ATLASSIAN_API_TOKEN</code></td><td>Atlassian API token</td><td>id.atlassian.com → Security → API Tokens</td></tr>
+      <tr><td><code>ANTHROPIC_API_KEY</code></td><td>Claude API key</td><td>console.anthropic.com → API Keys</td></tr>
+      <tr><td><code>GMAIL_USER</code></td><td>Gmail address to send from</td><td>Your Gmail address</td></tr>
+      <tr><td><code>GMAIL_APP_PASSWORD</code></td><td>Gmail app password (not your login password)</td><td>myaccount.google.com → Security → App Passwords</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout warning">
+    <strong>Note on Gmail App Password:</strong> This is a special 16-character password generated by Google specifically for apps.
+    It is <em>not</em> your regular Gmail password. You must have 2-Step Verification enabled on your Google account to create one.
+  </div>
+
+  <h3>Running Manually</h3>
+  <p>You can trigger the agent at any time without waiting for the 1st of the month:</p>
+  <ol>
+    <li>Go to your repo on github.com</li>
+    <li>Click the <strong>Actions</strong> tab</li>
+    <li>Click <strong>Monthly Release Notes</strong> in the left sidebar</li>
+    <li>Click <strong>Run workflow → Run workflow</strong></li>
+  </ol>
+
+  <hr class="divider">
+
+  <h2>Cost Breakdown</h2>
+  <table class="cost-table">
+    <thead><tr><th>Service</th><th>What it's used for</th><th>Cost</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Anthropic API (Claude)</td>
+        <td>Generating the release notes draft (~8,000 tokens per run)</td>
+        <td>~$0.01–0.02 per run<br><em>$5 credit lasts ~2 years</em></td>
+      </tr>
+      <tr>
+        <td>GitHub Actions</td>
+        <td>Running the scheduled workflow</td>
+        <td>Free (within free tier limits)</td>
+      </tr>
+      <tr>
+        <td>Atlassian API</td>
+        <td>Reading Jira issues and Confluence pages</td>
+        <td>Free (included in your subscription)</td>
+      </tr>
+      <tr>
+        <td>Gmail SMTP</td>
+        <td>Sending the draft email</td>
+        <td>Free</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout green">
+    <strong>Total estimated cost:</strong> Less than $0.25/year for the automated option.
+    The only required paid service is the Anthropic API, which charges per token used.
+  </div>
+
+  <hr class="divider">
+
+  <h2>Jira Labeling Convention</h2>
+  <p>
+    For the agent to pick up issues, they must be labeled in Jira with the correct release label
+    before the 1st of the month when the agent runs.
+  </p>
+  <table>
+    <thead><tr><th>Release Version</th><th>Jira Label</th></tr></thead>
+    <tbody>
+      <tr><td>4.4.0</td><td><code>UA4.4</code></td></tr>
+      <tr><td>4.5.0</td><td><code>UA4.5</code></td></tr>
+      <tr><td>4.6.0</td><td><code>UA4.6</code></td></tr>
+      <tr><td>5.0.0</td><td><code>UA5.0</code></td></tr>
+    </tbody>
+  </table>
+  <p>The agent auto-increments the minor version each month. Major version bumps require manually updating the label format.</p>
+
+  <hr class="divider">
+
+  <h2>Questions?</h2>
+  <p>Contact <strong>kevin.jackson@rohirrim.ai</strong> for access to the GitHub repo or help with setup.</p>
+
+</body>
+</html>
