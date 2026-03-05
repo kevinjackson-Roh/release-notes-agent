@@ -32,3 +32,4 @@ jobs:
           RECIPIENT_EMAIL:     kevin.jackson@rohirrim.ai
           CONFLUENCE_SPACE_KEY: RohanProcure
         run: python generate_release_notes.py
+
