@@ -43,13 +43,14 @@ def get_latest_release_version() -> tuple[str, str, int, int]:
         f"{CONF_BASE}/content/search",
         auth=AUTH,
         params={
-            "cql": f'space="{SPACE_KEY}" AND title ~ "Release Notes" AND type=page',
-            "orderby": "history.createdDate desc",
+            "cql": 'title ~ "Release Notes" AND type=page ORDER BY created DESC',
             "limit": 20,
         },
     )
     resp.raise_for_status()
-    results = resp.json().get("results", [])
+    data = resp.json()
+    print(f"  Confluence search returned {data.get('size', 0)} pages")
+    results = data.get("results", [])
 
     pattern = re.compile(r"v?(\d+)\.(\d+)(?:\.\d+)?\s+Release Notes", re.IGNORECASE)
     best, best_version = None, (0, 0)
