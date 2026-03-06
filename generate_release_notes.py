@@ -168,27 +168,20 @@ Here are the previous release notes to use as a tone and structure reference:
 {previous_content[:8000]}
 </previous_release_notes>
 
-Write release notes for version {version} following these rules:
+Write release notes for version {version} that are a continuation of the previous release notes above.
 
-EXTERNAL FACING section (written for customers):
-- This audience is non-technical customers and end users — no Jira keys, no engineering jargon
-- Use plain, friendly, benefit-focused language ("You can now...", "It's easier to...")
-- Keep bullet points short and digestible — one clear idea per bullet, max 2 lines each
-- Group related items under bolded headers (e.g. Enhancements, Bug Fixes)
-- End with a short "What This Release Means for You" paragraph summarising the overall impact
-- Match the warm, professional tone of the previous external section exactly
+The previous release notes are your single source of truth for tone, style, structure, and formatting.
+Replicate every section exactly as it appears — same headers, same bullet style, same sentence length,
+same level of detail, same voice. A reader should not be able to tell these were written by a different person.
 
-INTERNAL FACING section (written for the engineering and product team):
-- This audience is technical — developers, PMs, QA
-- Be concise and specific — short bullet points with just enough detail to understand the change
-- Include Jira ticket links in brackets at the end of each bullet e.g. ([PRCR-840](url))
-- Group items by product area (e.g. Compliance, Low Side Tool, API) matching the previous notes
-- Match the direct, technical tone of the previous internal section exactly
+The EXTERNAL FACING section is written for customers and end users.
+The INTERNAL FACING section is written for the internal engineering and product team.
+Study how each of those sections is written in the reference and copy that style precisely for each.
 
-GENERAL RULES:
+Rules:
 - Output clean Markdown only — no preamble, no commentary
-- Only include content supported by the Jira issues above — do not invent features
-- Match the overall structure and section formatting of the previous release notes""",
+- Only include content supported by the Jira issues listed above — do not invent features
+- Include Jira ticket links in the internal section only, matching the format used in the reference""",
             }
         ],
     )
