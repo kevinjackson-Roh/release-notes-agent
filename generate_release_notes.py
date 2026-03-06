@@ -168,15 +168,27 @@ Here are the previous release notes to use as a tone and structure reference:
 {previous_content[:8000]}
 </previous_release_notes>
 
-Write release notes for version {version} that:
-1. Exactly match the tone, section structure, and formatting of the previous release notes
-2. Include EXTERNAL FACING and INTERNAL FACING sections as shown in the reference
-3. Write the external section in plain user-friendly language — no Jira keys or technical jargon
-4. Include Jira ticket links in the internal section only
-5. Include a "What This Release Means for You" summary at the end of the external section
-6. Output clean Markdown only — no preamble, no commentary
+Write release notes for version {version} following these rules:
 
-Only describe features supported by the issues above. Do not invent content.""",
+EXTERNAL FACING section (written for customers):
+- This audience is non-technical customers and end users — no Jira keys, no engineering jargon
+- Use plain, friendly, benefit-focused language ("You can now...", "It's easier to...")
+- Keep bullet points short and digestible — one clear idea per bullet, max 2 lines each
+- Group related items under bolded headers (e.g. Enhancements, Bug Fixes)
+- End with a short "What This Release Means for You" paragraph summarising the overall impact
+- Match the warm, professional tone of the previous external section exactly
+
+INTERNAL FACING section (written for the engineering and product team):
+- This audience is technical — developers, PMs, QA
+- Be concise and specific — short bullet points with just enough detail to understand the change
+- Include Jira ticket links in brackets at the end of each bullet e.g. ([PRCR-840](url))
+- Group items by product area (e.g. Compliance, Low Side Tool, API) matching the previous notes
+- Match the direct, technical tone of the previous internal section exactly
+
+GENERAL RULES:
+- Output clean Markdown only — no preamble, no commentary
+- Only include content supported by the Jira issues above — do not invent features
+- Match the overall structure and section formatting of the previous release notes""",
             }
         ],
     )
