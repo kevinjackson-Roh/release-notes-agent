@@ -8,7 +8,6 @@ using Claude, and emails a draft to the configured recipient.
 """
 
 import os
-import re
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -38,67 +37,14 @@ CONF_BASE  = f"https://{DOMAIN}/wiki/rest/api"
 
 def get_latest_release_version() -> tuple[str, str, int, int]:
     """
-    Search Confluence for versioned release notes pages and return the most
-    recent one as (page_id, title, major, minor).
+    Return the current release version using REF_PAGE_ID and CURRENT_VERSION.
+    Update these in the .command file each month before running.
     """
-    # Step 1 — find the "Monthly Release Notes" parent page using CQL
-    parent_resp = requests.get(
-        f"{CONF_BASE}/content/search",
-        auth=AUTH,
-        params={
-            "cql": 'title = "Monthly Release Notes" AND type=page',
-            "limit": 5,
-        },
-    )
-    parent_resp.raise_for_status()
-    parent_results = parent_resp.json().get("results", [])
-
-    if parent_results:
-        # Step 2 — get child pages using CQL parent filter
-        parent_id = parent_results[0]["id"]
-        print(f"  Found 'Monthly Release Notes' parent page (id: {parent_id})")
-        resp = requests.get(
-            f"{CONF_BASE}/content/search",
-            auth=AUTH,
-            params={
-                "cql": f'parent = {parent_id} AND type=page ORDER BY created DESC',
-                "limit": 50,
-            },
-        )
-        resp.raise_for_status()
-        results = resp.json().get("results", [])
-        print(f"  Found {len(results)} child pages")
-    else:
-        # Fallback — search all pages for release notes
-        print("  'Monthly Release Notes' parent not found, searching all pages...")
-        resp = requests.get(
-            f"{CONF_BASE}/content/search",
-            auth=AUTH,
-            params={
-                "cql": 'title ~ "Release Notes" AND type=page ORDER BY created DESC',
-                "limit": 50,
-            },
-        )
-        resp.raise_for_status()
-        results = resp.json().get("results", [])
-        print(f"  Found {len(results)} pages")
-
-    pattern = re.compile(r"v?(\d+)\.(\d+)(?:\.\d+)?\s+Release Notes", re.IGNORECASE)
-    best, best_version = None, (0, 0)
-
-    for page in results:
-        match = pattern.search(page["title"])
-        if match:
-            major, minor = int(match.group(1)), int(match.group(2))
-            if (major, minor) > best_version:
-                best_version = (major, minor)
-                best = page
-
-    if not best:
-        raise RuntimeError(
-            "Could not find any versioned release notes pages in Confluence. "
-            "Expected titles like '4.4.0 Release Notes' or 'v4.4.0 Release Notes'."
-        )
+    parts = CURRENT_VERSION.split(".")
+    major, minor = int(parts[0]), int(parts[1])
+    title = f"Release {major}.{minor} Internal + External"
+    print(f"  Using configured reference page (id: {REF_PAGE_ID}, v{major}.{minor})")
+    return REF_PAGE_ID, title, major, minor
 
     major, minor = best_version
     print(f"  Latest release notes found: {best['title']} (v{major}.{minor})")
