@@ -46,10 +46,6 @@ def get_latest_release_version() -> tuple[str, str, int, int]:
     print(f"  Using configured reference page (id: {REF_PAGE_ID}, v{major}.{minor})")
     return REF_PAGE_ID, title, major, minor
 
-    major, minor = best_version
-    print(f"  Latest release notes found: {best['title']} (v{major}.{minor})")
-    return best["id"], best["title"], major, minor
-
 
 def get_confluence_page_content(page_id: str) -> str:
     """Fetch the storage-format body of a Confluence page."""
@@ -66,12 +62,13 @@ def get_confluence_page_content(page_id: str) -> str:
 
 def get_jira_issues(label: str) -> list[dict]:
     """Return all Jira issues tagged with the given label."""
-    resp = requests.get(
-        f"{JIRA_BASE}/search/jql",
+    resp = requests.post(
+        f"{JIRA_BASE}/issue/search/jql",
         auth=AUTH,
-        params={
+        headers={"Content-Type": "application/json", "Accept": "application/json"},
+        json={
             "jql": f'labels = "{label}"',
-            "fields": "summary,description,issuetype,status,priority,labels",
+            "fields": ["summary", "description", "issuetype", "status", "priority", "labels"],
             "maxResults": 100,
         },
     )
