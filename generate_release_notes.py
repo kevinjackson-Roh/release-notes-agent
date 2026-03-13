@@ -8,7 +8,6 @@ using Claude, and emails a draft to the configured recipient.
 """
 
 import os
-import re
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -26,6 +25,8 @@ GMAIL_USER        = os.environ["GMAIL_USER"]             # sender gmail address
 GMAIL_APP_PASSWORD = os.environ["GMAIL_APP_PASSWORD"]   # Gmail app password (not account password)
 RECIPIENT         = os.environ.get("RECIPIENT_EMAIL", "kevin.jackson@rohirrim.ai")
 SPACE_KEY         = os.environ.get("CONFLUENCE_SPACE_KEY", "RohanProcure")
+CURRENT_VERSION   = os.environ.get("CURRENT_VERSION", "4.4")   # e.g. "4.4" → next will be 4.5
+REF_PAGE_ID       = os.environ.get("CONFLUENCE_REF_PAGE_ID", "1388937217")  # 4.4.0 Release Notes
 
 AUTH       = HTTPBasicAuth(ATLASSIAN_EMAIL, ATLASSIAN_TOKEN)
 JIRA_BASE  = f"https://{DOMAIN}/rest/api/3"
@@ -36,42 +37,14 @@ CONF_BASE  = f"https://{DOMAIN}/wiki/rest/api"
 
 def get_latest_release_version() -> tuple[str, str, int, int]:
     """
-    Search Confluence for versioned release notes pages and return the most
-    recent one as (page_id, title, major, minor).
+    Return the current release version using the configured REF_PAGE_ID and
+    CURRENT_VERSION env vars (e.g. CURRENT_VERSION=4.4 → ref page is 4.4.0).
     """
-    resp = requests.get(
-        f"{CONF_BASE}/content/search",
-        auth=AUTH,
-        params={
-            "cql": 'title ~ "Release Notes" AND type=page ORDER BY created DESC',
-            "limit": 20,
-        },
-    )
-    resp.raise_for_status()
-    data = resp.json()
-    print(f"  Confluence search returned {data.get('size', 0)} pages")
-    results = data.get("results", [])
-
-    pattern = re.compile(r"v?(\d+)\.(\d+)(?:\.\d+)?\s+Release Notes", re.IGNORECASE)
-    best, best_version = None, (0, 0)
-
-    for page in results:
-        match = pattern.search(page["title"])
-        if match:
-            major, minor = int(match.group(1)), int(match.group(2))
-            if (major, minor) > best_version:
-                best_version = (major, minor)
-                best = page
-
-    if not best:
-        raise RuntimeError(
-            "Could not find any versioned release notes pages in Confluence. "
-            "Expected titles like '4.4.0 Release Notes' or 'v4.4.0 Release Notes'."
-        )
-
-    major, minor = best_version
-    print(f"  Latest release notes found: {best['title']} (v{major}.{minor})")
-    return best["id"], best["title"], major, minor
+    parts = CURRENT_VERSION.split(".")
+    major, minor = int(parts[0]), int(parts[1])
+    title = f"{major}.{minor}.0 Release Notes"
+    print(f"  Using configured reference page (id: {REF_PAGE_ID}, version: {major}.{minor})")
+    return REF_PAGE_ID, title, major, minor
 
 
 def get_confluence_page_content(page_id: str) -> str:
