@@ -62,13 +62,12 @@ def get_confluence_page_content(page_id: str) -> str:
 
 def get_jira_issues(label: str) -> list[dict]:
     """Return all Jira issues tagged with the given label."""
-    resp = requests.post(
-        f"{JIRA_BASE}/issue/search/jql",
+    resp = requests.get(
+        f"https://{DOMAIN}/rest/api/2/search",
         auth=AUTH,
-        headers={"Content-Type": "application/json", "Accept": "application/json"},
-        json={
+        params={
             "jql": f'labels = "{label}"',
-            "fields": ["summary", "description", "issuetype", "status", "priority", "labels"],
+            "fields": "summary,description,issuetype,status,priority,labels",
             "maxResults": 100,
         },
     )
