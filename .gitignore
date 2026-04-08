@@ -1,1 +1,11 @@
-run_release_notes.command
+# Local runner files — contain credentials, never commit
+*.command
+
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Build artifacts
+build_howto_pdf.py
+icon.svg
